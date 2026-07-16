@@ -8,6 +8,8 @@ export interface Credit {
   work: string;
   /** optional title-card / logo in /public/credits */
   img?: string;
+  /** true when img is a brand logo (rendered contained + inverted white on dark) */
+  logo?: boolean;
 }
 
 export interface Rep {
@@ -52,7 +54,7 @@ export const site = {
     { name: "Lioness", work: "Television", img: "/credits/lioness.jpg" },
     { name: "Frisco King", work: "Film", img: "/credits/frisco-king.jpg" },
     { name: "Runway 817", work: "Runway", img: "/credits/runway-817.png" },
-    { name: "Supercuts", work: "Brand campaign", img: "/credits/supercuts.png" },
+    { name: "Supercuts", work: "Brand campaign", img: "/credits/supercuts.png", logo: true },
     { name: "Toyota Music Factory", work: "The Pavilion" },
   ] satisfies Credit[],
 

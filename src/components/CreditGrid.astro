@@ -8,7 +8,13 @@ import { site } from "@/data/site";
       <li class="credit reveal">
         <div class="credit__media">
           {c.img ? (
-            <img src={c.img} alt={`${c.name} — ${c.work}`} loading="lazy" decoding="async" />
+            <img
+              src={c.img}
+              alt={`${c.name} — ${c.work}`}
+              class:list={[c.logo ? "credit__logo" : "credit__cover"]}
+              loading="lazy"
+              decoding="async"
+            />
           ) : (
             <span class="credit__mark">{c.name.charAt(0)}</span>
           )}
@@ -45,10 +51,19 @@ import { site } from "@/data/site";
     border-radius: 3px;
     overflow: hidden;
   }
-  .credit__media img {
+  .credit__cover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* Brand wordmarks: normalize any logo to a clean white silhouette so it
+     reads on the dark card (fixes black-on-dark logos like Supercuts). */
+  .credit__logo {
+    max-width: 72%;
+    max-height: 52%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.82;
   }
   .credit__mark {
     font-family: var(--font-display);

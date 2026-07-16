@@ -6,7 +6,7 @@ for (const route of routes) {
   test(`${route} loads with hero, nav, and footer`, async ({ page }) => {
     const res = await page.goto(route);
     expect(res?.status(), `status for ${route}`).toBeLessThan(400);
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator("main h1")).toBeVisible();
     await expect(page.locator("[data-nav] .nav__link")).toHaveCount(4);
     await expect(page.locator("footer")).toContainText("All rights reserved");
   });

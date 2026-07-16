@@ -18,10 +18,21 @@ import hero from "@/assets/portraits/hero-leather.jpg";
   <!-- ── Hero ─────────────────────────────────────────────── -->
   <section class="hero">
     <div class="hero__media">
+      <video
+        class="hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/videos/hero-poster.jpg"
+      >
+        <source src="/videos/hero.mp4" type="video/mp4" />
+      </video>
       <Image
         src={hero}
         alt={`${site.name}, ${site.role}`}
-        class="hero__img"
+        class="hero__img hero__img--fallback"
         widths={[768, 1200, 1600, 2000]}
         sizes="100vw"
         loading="eager"
@@ -120,6 +131,33 @@ import hero from "@/assets/portraits/hero-leather.jpg";
     height: 100%;
     object-fit: cover;
     object-position: 50% 28%;
+  }
+  .hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  /* Desktop: motion. Mobile / reduced-motion: the still portrait (saves data
+     and honors the user's preference). */
+  .hero__img--fallback {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .hero__video {
+      display: none;
+    }
+    .hero__img--fallback {
+      display: block;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__video {
+      display: none;
+    }
+    .hero__img--fallback {
+      display: block;
+    }
   }
   .hero__scrim {
     position: absolute;

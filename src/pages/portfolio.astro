@@ -17,6 +17,28 @@ import { site } from "@/data/site";
     <p class="p-head__sub reveal">q3'25 — q1'26</p>
   </header>
 
+  <section class="p-motion container-content reveal">
+    <div class="p-motion__frame">
+      <video
+        class="p-motion__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/videos/portfolio-poster.jpg"
+      >
+        <source src="/videos/portfolio.mp4" type="video/mp4" />
+      </video>
+      <img class="p-motion__poster" src="/videos/portfolio-poster.jpg" alt="Jett Williams in motion" loading="lazy" />
+    </div>
+    <div class="p-motion__copy">
+      <p class="eyebrow">In Motion</p>
+      <h2 class="p-motion__title">Presence on camera.</h2>
+      <p class="p-motion__note">Movement, timing, and body awareness from years of martial arts and athletic training — carried into every frame.</p>
+    </div>
+  </section>
+
   <div class="container-content" style="padding-bottom: clamp(3rem,8vw,6rem);">
     <Gallery />
   </div>
@@ -53,6 +75,59 @@ import { site } from "@/data/site";
     text-transform: uppercase;
     color: var(--muted);
   }
+  .p-motion {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    padding-bottom: clamp(3rem, 7vw, 5rem);
+  }
+  .p-motion__frame {
+    position: relative;
+    width: min(360px, 74vw);
+    aspect-ratio: 9 / 16;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .p-motion__video,
+  .p-motion__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .p-motion__poster {
+    display: none;
+  }
+  .p-motion__title {
+    font-size: clamp(28px, 4vw, 46px);
+    margin-top: 0.75rem;
+    max-width: 14ch;
+  }
+  .p-motion__note {
+    margin-top: 1.25rem;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 17px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .p-motion__video {
+      display: none;
+    }
+    .p-motion__poster {
+      display: block;
+    }
+  }
+  @media (min-width: 820px) {
+    .p-motion {
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+    }
+  }
+
   .p-cta {
     padding-block: clamp(4rem, 9vw, 7rem);
     border-top: 1px solid var(--line);
