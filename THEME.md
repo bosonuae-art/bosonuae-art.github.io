@@ -43,12 +43,12 @@ light instead of dark — follow the note next to it.
 Open **`src/styles/fonts.css`**. There are two parts:
 
 ```css
-@import "@fontsource-variable/fraunces";      /* the headline font   */
+@import "@fontsource/bebas-neue";             /* the headline font   */
 @import "@fontsource-variable/public-sans";   /* the body text font  */
 @import "@fontsource-variable/martian-mono";  /* the small label font*/
 
 :root {
-  --font-display: "Fraunces Variable", serif;              /* headlines */
+  --font-display: "Bebas Neue", sans-serif;                /* headlines */
   --font-body: "Public Sans Variable", sans-serif;         /* body      */
   --font-mono: "Martian Mono Variable", monospace;         /* labels    */
 }
@@ -70,10 +70,25 @@ Save, and every headline changes. Same idea for body and label fonts.
 
 | Headline (display) | Body        | Feel                    |
 |--------------------|-------------|-------------------------|
-| Fraunces *(default)* | Public Sans | warm, modern editorial |
-| Cormorant          | Inter       | high-fashion, delicate  |
-| Playfair Display   | Work Sans   | classic magazine        |
-| Syne               | Manrope     | bold, contemporary      |
+| Bebas Neue *(default)* | Public Sans | tall, condensed, bad-boy fashion |
+| Anton              | Public Sans | ultra-heavy rock-poster |
+| Archivo Black      | Inter       | bold modern grotesque   |
+| Fraunces           | Public Sans | warm, refined editorial |
+
+## The evolving accent (color from his work)
+
+The gold accent isn't fixed — as you scroll, it **morphs to the dominant color of
+whichever photo is on screen** (red editorials → red, gold-in-water → teal, runway
+→ purple), and each gallery photo casts a soft glow in its own color. Those colors
+are extracted from the images automatically.
+
+- The **starting/default** accent is still `--accent` in `theme.css` — change it to
+  set the base color (shown in the hero and anywhere no photo is in view).
+- If you **add or change portrait photos**, re-run the extractor so the new colors
+  are picked up: `node scripts/extract-colors.mjs`
+- Prefer a **fixed** gold everywhere instead of the evolving effect? Tell me and I'll
+  switch it off in one place (visitors who set "reduce motion" already get the fixed
+  accent automatically).
 
 ---
 
