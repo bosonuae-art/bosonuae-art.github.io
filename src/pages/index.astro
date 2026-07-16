@@ -1,16 +1,302 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import Section from "@/components/Section.astro";
+import Button from "@/components/Button.astro";
+import CreditGrid from "@/components/CreditGrid.astro";
+import Representation from "@/components/Representation.astro";
+import InstagramStrip from "@/components/InstagramStrip.astro";
+import ContactDetails from "@/components/ContactDetails.astro";
 import { site } from "@/data/site";
+import hero from "@/assets/portraits/hero-leather.jpg";
 ---
 
-<BaseLayout title={`${site.name} — ${site.role}`} description={site.about.tagline}>
-  <section class="container-content" style="padding-top:8rem;padding-bottom:6rem;">
-    <p class="eyebrow reveal">Scaffold OK</p>
-    <h1 class="font-display text-accent reveal" style="font-size:clamp(48px,8vw,96px);margin-top:0.5rem;">
-      {site.nickname}
-    </h1>
-    <p class="text-muted reveal" style="max-width:60ch;margin-top:1rem;">
-      Layout, nav, and footer wired. Home page lands in Task 6.
-    </p>
+<BaseLayout
+  title={`${site.name} — ${site.role}`}
+  description={site.about.tagline}
+>
+  <!-- ── Hero ─────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero__media">
+      <Image
+        src={hero}
+        alt={`${site.name}, ${site.role}`}
+        class="hero__img"
+        widths={[768, 1200, 1600, 2000]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <div class="hero__scrim"></div>
+    </div>
+
+    <div class="hero__content container-wide">
+      <p class="eyebrow hero__eyebrow">{site.role}</p>
+      <h1 class="hero__name">Jett<span>Williams</span></h1>
+      <p class="hero__tagline text-pretty">{site.about.tagline}</p>
+      <div class="hero__cta">
+        <Button href="/contact">Book Now</Button>
+        <Button href="/portfolio" variant="ghost">View Portfolio</Button>
+      </div>
+    </div>
+
+    <a href="#approach" class="hero__scroll" aria-label="Scroll to content">
+      <span></span>
+    </a>
   </section>
+
+  <!-- ── Approach / stats ─────────────────────────────────── -->
+  <section id="approach" class="approach">
+    <div class="container-content approach__inner">
+      <div class="approach__lede reveal">
+        <p class="eyebrow">Approach</p>
+        <h2 class="approach__title">{site.qualityHeading}</h2>
+        <p class="approach__body text-pretty">{site.taglineHero}</p>
+      </div>
+      <div class="stats reveal">
+        <div class="stat">
+          <span class="stat__num">65K+</span>
+          <span class="stat__label">views per quarter</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">76%</span>
+          <span class="stat__label">avg. retention rate</span>
+        </div>
+      </div>
+    </div>
+    <p class="container-content approach__stat-note reveal">{site.statLine}</p>
+  </section>
+
+  <!-- ── Featured credits ─────────────────────────────────── -->
+  <Section eyebrow="Featured By" title="Selected screen & runway credits" id="credits">
+    <CreditGrid />
+  </Section>
+
+  <!-- ── Representation ───────────────────────────────────── -->
+  <Section eyebrow="Representation" title="Represented worldwide">
+    <Representation />
+  </Section>
+
+  <!-- ── Instagram ────────────────────────────────────────── -->
+  <Section eyebrow="Follow The Adventure" title="On set & on the move">
+    <InstagramStrip />
+  </Section>
+
+  <!-- ── Contact ──────────────────────────────────────────── -->
+  <section class="cta">
+    <div class="container-content cta__inner reveal">
+      <div>
+        <p class="eyebrow">Contact the Team</p>
+        <h2 class="cta__title">Available for domestic & international bookings.</h2>
+        <div class="cta__btn"><Button href="/contact">Book Now</Button></div>
+      </div>
+      <ContactDetails />
+    </div>
+  </section>
+
+  <!-- ── Quote ────────────────────────────────────────────── -->
+  <figure class="quote reveal">
+    <blockquote class="container-content">“{site.franklinQuote.text}”</blockquote>
+    <figcaption class="container-content">— {site.franklinQuote.source}</figcaption>
+  </figure>
 </BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 28%;
+  }
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, transparent 22%, transparent 45%, rgba(10, 10, 10, 0.85) 92%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.6) 0%, transparent 55%);
+  }
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    padding-bottom: clamp(3rem, 8vh, 6rem);
+    padding-top: 6rem;
+  }
+  .hero__eyebrow {
+    margin-bottom: 1rem;
+  }
+  .hero__name {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(64px, 15vw, 200px);
+    line-height: 0.86;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin: 0;
+  }
+  .hero__name span {
+    color: var(--accent);
+  }
+  .hero__tagline {
+    margin-top: 1.75rem;
+    max-width: 44ch;
+    font-size: clamp(16px, 2.2vw, 20px);
+    color: var(--muted);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.25rem;
+  }
+  .hero__scroll {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 26px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    display: none;
+  }
+  .hero__scroll span {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 3px;
+    height: 7px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: scroll-cue 1.8s ease-in-out infinite;
+  }
+  @keyframes scroll-cue {
+    0%, 100% { opacity: 0; transform: translateY(0); }
+    30% { opacity: 1; }
+    60% { opacity: 1; transform: translateY(12px); }
+  }
+  @media (min-width: 880px) {
+    .hero__scroll { display: block; }
+  }
+
+  /* Approach + stats */
+  .approach {
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .approach__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .approach__title {
+    font-size: clamp(32px, 5vw, 60px);
+    margin-top: 0.75rem;
+    max-width: 16ch;
+  }
+  .approach__body {
+    margin-top: 1.5rem;
+    max-width: 52ch;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .stats {
+    display: flex;
+    gap: 2.5rem;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--accent);
+    flex: 1;
+  }
+  .stat__num {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 7vw, 72px);
+    line-height: 1;
+    color: var(--text);
+  }
+  .stat__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .approach__stat-note {
+    margin-top: 2.5rem;
+    max-width: 70ch;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .approach__inner {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  /* Contact CTA */
+  .cta {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-top: 1px solid var(--line);
+  }
+  .cta__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .cta__title {
+    font-size: clamp(28px, 4.5vw, 46px);
+    max-width: 16ch;
+    margin-top: 0.75rem;
+  }
+  .cta__btn {
+    margin-top: 2rem;
+  }
+  @media (min-width: 860px) {
+    .cta__inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  /* Quote */
+  .quote {
+    padding-block: clamp(4rem, 9vw, 7rem);
+    border-top: 1px solid var(--line);
+  }
+  .quote blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 56px);
+    line-height: 1.12;
+    color: var(--text);
+    margin: 0;
+    max-width: 20ch;
+  }
+  .quote figcaption {
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+</style>
