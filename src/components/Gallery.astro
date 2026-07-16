@@ -1,0 +1,143 @@
+---
+import { Image, getImage } from "astro:assets";
+import { gallery, categories } from "@/data/gallery";
+
+// Pre-generate a large rendition per image for the lightbox.
+const items = await Promise.all(
+  gallery.map(async (g, index) => {
+    const full = await getImage({ src: g.src, width: 1600, format: "webp" });
+    return { ...g, index, fullSrc: full.src };
+  })
+);
+---
+
+<div class="gallery" data-gallery>
+  <div class="gallery__tabs" role="tablist" aria-label="Filter portfolio">
+    <button class="gallery__tab is-active" data-filter="all" role="tab" aria-selected="true">
+      All
+    </button>
+    {
+      categories.map((c) => (
+        <button class="gallery__tab" data-filter={c} role="tab" aria-selected="false">
+          {c}
+        </button>
+      ))
+    }
+  </div>
+
+  <ul class="gallery__grid">
+    {
+      items.map((it) => (
+        <li class="gallery__cell" data-category={it.category}>
+          <button
+            class="gallery__btn"
+            data-full={it.fullSrc}
+            data-alt={it.alt}
+            aria-label={`Open image: ${it.alt}`}
+          >
+            <Image
+              src={it.src}
+              alt={it.alt}
+              widths={[400, 700]}
+              sizes="(min-width:1024px) 32vw, (min-width:640px) 45vw, 90vw"
+              class="gallery__img"
+              loading="lazy"
+            />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .gallery__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .gallery__tab {
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+  }
+  .gallery__tab:hover {
+    color: var(--text);
+  }
+  .gallery__tab.is-active {
+    color: var(--bg);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .gallery__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    column-count: 2;
+    column-gap: 1rem;
+  }
+  .gallery__cell {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+  .gallery__cell[hidden] {
+    display: none;
+  }
+  .gallery__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--surface);
+    cursor: zoom-in;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .gallery__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 400ms ease, opacity 400ms ease;
+    opacity: 0.94;
+  }
+  .gallery__btn:hover .gallery__img {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+  @media (min-width: 1024px) {
+    .gallery__grid {
+      column-count: 3;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const root = document.querySelector("[data-gallery]");
+    if (!root) return;
+    const tabs = root.querySelectorAll(".gallery__tab");
+    const cells = root.querySelectorAll(".gallery__cell");
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const f = tab.getAttribute("data-filter");
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", String(active));
+        });
+        cells.forEach((c) => {
+          c.hidden = f !== "all" && c.getAttribute("data-category") !== f;
+        });
+      });
+    });
+  })();
+</script>

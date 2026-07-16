@@ -1,0 +1,191 @@
+---
+// Accessible lightbox. Reads [data-gallery] .gallery__btn triggers on the page.
+// Navigates the currently-visible images (respects the active filter).
+---
+
+<div class="lb" data-lightbox hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb__close" data-lb-close aria-label="Close (Esc)">✕</button>
+  <button class="lb__nav lb__nav--prev" data-lb-prev aria-label="Previous image">‹</button>
+  <figure class="lb__figure">
+    <img class="lb__img" data-lb-img alt="" />
+    <figcaption class="lb__cap" data-lb-cap></figcaption>
+  </figure>
+  <button class="lb__nav lb__nav--next" data-lb-next aria-label="Next image">›</button>
+  <div class="lb__count" data-lb-count></div>
+</div>
+
+<style>
+  .lb {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--bg) 94%, black);
+    backdrop-filter: blur(6px);
+    padding: clamp(1rem, 4vw, 3rem);
+  }
+  .lb[hidden] {
+    display: none;
+  }
+  .lb__figure {
+    margin: 0;
+    max-width: min(1100px, 92vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .lb__img {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 3px;
+  }
+  .lb__cap {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-align: center;
+    max-width: 60ch;
+  }
+  .lb__close,
+  .lb__nav {
+    position: absolute;
+    z-index: 2;
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    color: var(--text);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .lb__close:hover,
+  .lb__nav:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .lb__close {
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    font-size: 16px;
+  }
+  .lb__nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    font-size: 26px;
+    line-height: 1;
+  }
+  .lb__nav--prev {
+    left: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .lb__nav--next {
+    right: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .lb__count {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const lb = document.querySelector("[data-lightbox]");
+    const gallery = document.querySelector("[data-gallery]");
+    if (!lb || !gallery) return;
+
+    const imgEl = lb.querySelector("[data-lb-img]");
+    const capEl = lb.querySelector("[data-lb-cap]");
+    const countEl = lb.querySelector("[data-lb-count]");
+    const btnClose = lb.querySelector("[data-lb-close]");
+    const btnPrev = lb.querySelector("[data-lb-prev]");
+    const btnNext = lb.querySelector("[data-lb-next]");
+
+    let shots = [];
+    let i = 0;
+    let lastFocused = null;
+
+    function visibleButtons() {
+      return Array.from(gallery.querySelectorAll(".gallery__btn")).filter(
+        (b) => !b.closest(".gallery__cell").hidden
+      );
+    }
+
+    function render() {
+      const s = shots[i];
+      if (!s) return;
+      imgEl.src = s.full;
+      imgEl.alt = s.alt;
+      capEl.textContent = s.alt;
+      countEl.textContent = `${i + 1} / ${shots.length}`;
+    }
+
+    function open(startBtn) {
+      const btns = visibleButtons();
+      shots = btns.map((b) => ({ full: b.getAttribute("data-full"), alt: b.getAttribute("data-alt") }));
+      i = btns.indexOf(startBtn);
+      if (i < 0) i = 0;
+      lastFocused = startBtn;
+      lb.hidden = false;
+      document.body.style.overflow = "hidden";
+      render();
+      btnClose.focus();
+    }
+
+    function close() {
+      lb.hidden = true;
+      document.body.style.overflow = "";
+      imgEl.src = "";
+      if (lastFocused) lastFocused.focus();
+    }
+
+    function go(delta) {
+      if (!shots.length) return;
+      i = (i + delta + shots.length) % shots.length;
+      render();
+    }
+
+    gallery.addEventListener("click", (e) => {
+      const btn = e.target.closest(".gallery__btn");
+      if (btn) open(btn);
+    });
+    btnClose.addEventListener("click", close);
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (lb.hidden) return;
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "ArrowRight") go(1);
+      else if (e.key === "Tab") {
+        // simple focus trap across the three controls
+        const focusables = [btnClose, btnPrev, btnNext];
+        const idx = focusables.indexOf(document.activeElement);
+        e.preventDefault();
+        const next = e.shiftKey ? idx - 1 : idx + 1;
+        focusables[(next + focusables.length) % focusables.length].focus();
+      }
+    });
+  })();
+</script>
