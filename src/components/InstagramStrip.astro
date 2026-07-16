@@ -11,7 +11,7 @@ const shots = (featured.length >= 5 ? featured : gallery).slice(0, 6);
   <ul class="ig__strip">
     {
       shots.map((s) => (
-        <li class="ig__item">
+        <li class="ig__item" data-accent-color={s.color} style={`--c:${s.color}`}>
           <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" aria-label={`View ${site.instagram.handle} on Instagram`}>
             <Image src={s.src} alt={s.alt} width={360} height={450} class="ig__img" loading="lazy" />
           </a>

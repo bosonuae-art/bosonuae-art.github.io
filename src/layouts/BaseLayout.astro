@@ -2,7 +2,7 @@
 import "@/styles/global.css";
 // Preload the three variable faces so headlines don't reflow (FOUT) when the
 // fonts arrive. fontsource ships font-display:swap.
-import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
+import bebasUrl from "@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff2?url";
 import publicSansUrl from "@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2?url";
 import martianMonoUrl from "@fontsource-variable/martian-mono/files/martian-mono-latin-wght-normal.woff2?url";
 import Nav from "@/components/Nav.astro";
@@ -52,7 +52,7 @@ const personJsonLd = JSON.stringify({
       // this class, content stays visible — no JS, no invisible sections.
       document.documentElement.classList.add("js");
     </script>
-    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bebasUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={publicSansUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={martianMonoUrl} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -150,6 +150,52 @@ const personJsonLd = JSON.stringify({
           { passive: true }
         );
         onScroll();
+      })();
+    </script>
+
+    <script is:inline>
+      // Evolving accent: as his work crosses the viewport center, morph the
+      // site's --accent to that photo's extracted color. Tagged elements carry
+      // data-accent-color. Skipped under reduced-motion (keeps the stable gold).
+      (function () {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const els = Array.from(document.querySelectorAll("[data-accent-color]"));
+        if (!els.length) return;
+        const root = document.documentElement;
+        let current = "";
+        let ticking = false;
+        function pick() {
+          ticking = false;
+          const cy = window.innerHeight / 2;
+          let best = null;
+          let bestD = Infinity;
+          for (const el of els) {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > window.innerHeight) continue;
+            const d = Math.abs((r.top + r.bottom) / 2 - cy);
+            if (d < bestD) {
+              bestD = d;
+              best = el;
+            }
+          }
+          const c = best && best.getAttribute("data-accent-color");
+          if (c && c !== current) {
+            current = c;
+            root.style.setProperty("--accent", c);
+          }
+        }
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(pick);
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        window.addEventListener("resize", pick, { passive: true });
+        pick();
       })();
     </script>
   </body>

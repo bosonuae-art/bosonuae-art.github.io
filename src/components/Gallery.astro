@@ -28,7 +28,12 @@ const items = await Promise.all(
   <ul class="gallery__grid">
     {
       items.map((it) => (
-        <li class="gallery__cell" data-category={it.category}>
+        <li
+          class="gallery__cell"
+          data-category={it.category}
+          data-accent-color={it.color}
+          style={`--c:${it.color}`}
+        >
           <button
             class="gallery__btn"
             data-full={it.fullSrc}
@@ -101,6 +106,12 @@ const items = await Promise.all(
     cursor: zoom-in;
     border-radius: 3px;
     overflow: hidden;
+    /* each photo radiates its own extracted color (--c) — the "jungle" */
+    box-shadow: 0 8px 34px -20px var(--c, transparent);
+    transition: box-shadow 450ms ease, transform 450ms ease;
+  }
+  .gallery__btn:hover {
+    box-shadow: 0 18px 55px -12px var(--c, transparent);
   }
   .gallery__img {
     width: 100%;

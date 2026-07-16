@@ -5,6 +5,10 @@
 // that folder and add an entry below.
 
 import type { ImageMetadata } from "astro";
+import imageColors from "@/data/imageColors.json";
+
+const colors = imageColors as Record<string, string>;
+const DEFAULT_COLOR = "#c9a86a";
 
 export type Category = "Editorial" | "Fashion Week" | "Studio" | "Conceptual";
 
@@ -15,6 +19,8 @@ export interface GalleryItem {
   alt: string;
   category: Category;
   featured?: boolean;
+  /** representative color extracted from the photo — drives the evolving accent */
+  color: string;
 }
 
 const files = import.meta.glob<{ default: ImageMetadata }>(
@@ -81,6 +87,10 @@ export const gallery: GalleryItem[] = entries.map((e) => ({
   alt: e.alt,
   category: e.category,
   featured: e.featured,
+  color: colors[e.file] ?? DEFAULT_COLOR,
 }));
+
+/** Look up an extracted color by portrait filename (for hero/about/etc.). */
+export const colorFor = (file: string): string => colors[file] ?? DEFAULT_COLOR;
 
 export const featured: GalleryItem[] = gallery.filter((g) => g.featured);

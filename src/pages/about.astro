@@ -4,9 +4,11 @@ import { Image } from "astro:assets";
 import Button from "@/components/Button.astro";
 import ContactDetails from "@/components/ContactDetails.astro";
 import { site } from "@/data/site";
+import { colorFor } from "@/data/gallery";
 import portrait from "@/assets/portraits/about-portrait.jpg";
 
 const { about } = site;
+const portraitColor = colorFor("about-portrait.jpg");
 ---
 
 <BaseLayout title={`About — ${site.name}`} description={about.tagline}>
@@ -17,7 +19,7 @@ const { about } = site;
   </header>
 
   <div class="container-content ab">
-    <div class="ab__media reveal">
+    <div class="ab__media reveal" data-accent-color={portraitColor}>
       <Image
         src={portrait}
         alt={`${site.name}, ${site.role}`}
