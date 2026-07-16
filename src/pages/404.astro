@@ -1,0 +1,45 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/Button.astro";
+import { site } from "@/data/site";
+---
+
+<BaseLayout title={`Page not found — ${site.name}`} description="The page you're looking for doesn't exist.">
+  <section class="nf container-content">
+    <p class="eyebrow">404</p>
+    <h1 class="nf__title">This page has left the set.</h1>
+    <p class="nf__body">The page you're looking for doesn't exist or has moved.</p>
+    <div class="nf__cta">
+      <Button href="/">Back home</Button>
+      <Button href="/portfolio" variant="ghost">View portfolio</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+    padding-bottom: 6rem;
+  }
+  .nf__title {
+    font-size: clamp(36px, 7vw, 72px);
+    margin: 1rem 0 0;
+    max-width: 16ch;
+  }
+  .nf__body {
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: 18px;
+    max-width: 44ch;
+  }
+  .nf__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+</style>
