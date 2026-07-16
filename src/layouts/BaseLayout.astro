@@ -47,6 +47,11 @@ const personJsonLd = JSON.stringify({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script is:inline>
+      // Confirm JS so .reveal elements start hidden (see global.css). Without
+      // this class, content stays visible — no JS, no invisible sections.
+      document.documentElement.classList.add("js");
+    </script>
     <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={publicSansUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={martianMonoUrl} as="font" type="font/woff2" crossorigin />
