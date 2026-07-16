@@ -1,0 +1,65 @@
+---
+import { site } from "@/data/site";
+const telUS = "tel:" + site.phoneUS.replace(/[^+\d]/g, "");
+const telIntl = "tel:" + site.phoneIntl.replace(/[^+\d]/g, "");
+---
+
+<div class="cd">
+  <div class="cd__group">
+    <p class="eyebrow">Book Now</p>
+    <a class="cd__lead" href={`mailto:${site.email}`}>{site.email}</a>
+    <a href={telUS}>{site.phoneUS}</a>
+    <a href={telIntl}><span class="cd__tag">Intl</span>{site.phoneIntl}</a>
+  </div>
+
+  <div class="cd__group">
+    <p class="eyebrow">Locations</p>
+    {site.locations.map((l) => <span class="cd__muted">{l}</span>)}
+    <a class="cd__ig" href={site.instagram.url} target="_blank" rel="noopener noreferrer"
+      >{site.instagram.handle} ↗</a
+    >
+  </div>
+</div>
+
+<style>
+  .cd {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .cd__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .cd__lead {
+    font-size: 18px;
+    color: var(--text);
+  }
+  .cd__group a:hover {
+    color: var(--accent);
+  }
+  .cd__muted {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .cd__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.5rem;
+  }
+  .cd__ig {
+    margin-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  @media (min-width: 560px) {
+    .cd {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

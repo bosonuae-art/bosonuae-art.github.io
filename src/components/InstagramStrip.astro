@@ -1,0 +1,80 @@
+---
+import { Image } from "astro:assets";
+import { featured, gallery } from "@/data/gallery";
+import { site } from "@/data/site";
+
+// Curated strip — hand-picked shots (not a live feed, which is fragile).
+const shots = (featured.length >= 5 ? featured : gallery).slice(0, 6);
+---
+
+<div class="ig">
+  <ul class="ig__strip">
+    {
+      shots.map((s) => (
+        <li class="ig__item">
+          <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" aria-label={`View ${site.instagram.handle} on Instagram`}>
+            <Image src={s.src} alt={s.alt} width={360} height={450} class="ig__img" loading="lazy" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <a class="ig__follow" href={site.instagram.url} target="_blank" rel="noopener noreferrer">
+    Follow {site.instagram.handle} ↗
+  </a>
+</div>
+
+<style>
+  .ig {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .ig__strip {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 62%;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ig__item {
+    scroll-snap-align: start;
+  }
+  .ig__img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 3px;
+    filter: grayscale(0.15);
+    transition: filter 300ms ease, transform 300ms ease;
+  }
+  .ig__item a:hover .ig__img {
+    filter: grayscale(0);
+    transform: translateY(-3px);
+  }
+  .ig__follow {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  @media (min-width: 640px) {
+    .ig__strip {
+      grid-auto-columns: 30%;
+    }
+  }
+  @media (min-width: 1024px) {
+    .ig__strip {
+      grid-auto-columns: 1fr;
+      overflow-x: visible;
+    }
+  }
+</style>

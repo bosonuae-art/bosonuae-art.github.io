@@ -1,0 +1,22 @@
+---
+interface Props {
+  href: string;
+  variant?: "accent" | "ghost";
+  external?: boolean;
+  download?: boolean;
+  class?: string;
+}
+const { href, variant = "accent", external = false, download = false, class: cls = "" } =
+  Astro.props;
+const cls2 = variant === "accent" ? "btn-accent" : "btn-ghost";
+---
+
+<a
+  href={href}
+  class:list={[cls2, cls]}
+  {...external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+  {...download ? { download: true } : {}}
+>
+  <slot />
+  {external && <span aria-hidden="true">↗</span>}
+</a>

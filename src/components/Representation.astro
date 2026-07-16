@@ -1,0 +1,115 @@
+---
+import { site } from "@/data/site";
+
+const tel = (p: string) => "tel:" + p.replace(/[^+\d]/g, "");
+---
+
+<ul class="reps">
+  {
+    site.reps.map((r) => (
+      <li class="rep reveal">
+        <div class="rep__head">
+          {r.logo ? (
+            <img class="rep__logo" src={r.logo} alt={r.name} loading="lazy" decoding="async" />
+          ) : (
+            <span class="rep__name">{r.name}</span>
+          )}
+        </div>
+        <dl class="rep__contact">
+          {r.phone && (
+            <div>
+              <dt>Phone</dt>
+              <dd><a href={tel(r.phone)}>{r.phone}</a></dd>
+            </div>
+          )}
+          {r.email && (
+            <div>
+              <dt>Email</dt>
+              <dd><a href={`mailto:${r.email}`}>{r.email}</a></dd>
+            </div>
+          )}
+        </dl>
+        {r.url && (
+          <a class="rep__site" href={r.url} target="_blank" rel="noopener noreferrer">
+            {r.name} ↗
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .reps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .rep {
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .rep__head {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .rep__logo {
+    max-height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+  }
+  .rep__name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--text);
+  }
+  .rep__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+  }
+  .rep__contact div {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+  .rep__contact dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 3.5rem;
+    flex-shrink: 0;
+  }
+  .rep__contact dd {
+    margin: 0;
+    font-size: 15px;
+  }
+  .rep__contact a:hover {
+    color: var(--accent);
+  }
+  .rep__site {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  @media (min-width: 640px) {
+    .reps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

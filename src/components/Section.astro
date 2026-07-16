@@ -1,0 +1,49 @@
+---
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  id?: string;
+  align?: "left" | "center";
+  wide?: boolean;
+  class?: string;
+}
+const { eyebrow, title, id, align = "left", wide = false, class: cls = "" } = Astro.props;
+const container = wide ? "container-wide" : "container-content";
+---
+
+<section id={id} class:list={["section", cls]}>
+  <div class:list={[container, "section__inner", align === "center" && "section__inner--center"]}>
+    {(eyebrow || title) && (
+      <header class="section__head reveal">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        {title && <h2 class="section__title">{title}</h2>}
+      </header>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: clamp(3.5rem, 8vw, 7rem);
+  }
+  .section__inner--center {
+    text-align: center;
+  }
+  .section__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .section__inner--center .section__head {
+    align-items: center;
+  }
+  .section__title {
+    font-size: clamp(28px, 4.5vw, 48px);
+    max-width: 20ch;
+  }
+  .section__inner--center .section__title {
+    max-width: 24ch;
+  }
+</style>
