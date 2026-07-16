@@ -162,4 +162,31 @@ The booking form isn't connected yet. In the meantime, email  <a href="mailto:Je
         window.addEventListener("resize", pick, { passive: true });
         pick();
       })();
+    </script> <script>
+      // Force background videos (hero, portfolio) to autoplay without a tap.
+      // iOS/Safari — and Low Power Mode especially — can ignore the `autoplay`
+      // attribute and show a play-button overlay. Calling play() from JS on a
+      // muted, inline video is permitted and clears it; we also retry once on
+      // the first user gesture as a fallback for the cases the browser blocks.
+      (function () {
+        var vids = document.querySelectorAll("video[autoplay]");
+        if (!vids.length) return;
+        function play(v) {
+          v.muted = true; // property, not just the attribute — required by iOS
+          v.setAttribute("muted", "");
+          var p = v.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        }
+        vids.forEach(function (v) {
+          play(v);
+          v.addEventListener("loadeddata", function () { play(v); }, { once: true });
+          v.addEventListener("canplay", function () { play(v); }, { once: true });
+        });
+        function retryAll() {
+          vids.forEach(play);
+        }
+        ["touchstart", "pointerdown", "click", "scroll"].forEach(function (evt) {
+          window.addEventListener(evt, retryAll, { once: true, passive: true });
+        });
+      })();
     </script> </body> </html> 
