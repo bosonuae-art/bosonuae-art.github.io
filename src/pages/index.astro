@@ -1,19 +1,16 @@
 ---
-import "@/styles/global.css";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/data/site";
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jett Williams — scaffold</title>
-  </head>
-  <body class="bg-bg text-text font-body">
-    <main class="container-content py-24">
-      <p class="eyebrow">Scaffold OK</p>
-      <h1 class="font-display text-accent text-6xl mt-4">Jett Williams</h1>
-      <p class="text-muted mt-4">Theme tokens compile. Replaced in Task 6.</p>
-    </main>
-  </body>
-</html>
+<BaseLayout title={`${site.name} — ${site.role}`} description={site.about.tagline}>
+  <section class="container-content" style="padding-top:8rem;padding-bottom:6rem;">
+    <p class="eyebrow reveal">Scaffold OK</p>
+    <h1 class="font-display text-accent reveal" style="font-size:clamp(48px,8vw,96px);margin-top:0.5rem;">
+      {site.nickname}
+    </h1>
+    <p class="text-muted reveal" style="max-width:60ch;margin-top:1rem;">
+      Layout, nav, and footer wired. Home page lands in Task 6.
+    </p>
+  </section>
+</BaseLayout>

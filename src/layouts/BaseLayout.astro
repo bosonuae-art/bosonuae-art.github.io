@@ -1,0 +1,151 @@
+---
+import "@/styles/global.css";
+// Preload the three variable faces so headlines don't reflow (FOUT) when the
+// fonts arrive. fontsource ships font-display:swap.
+import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
+import publicSansUrl from "@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2?url";
+import martianMonoUrl from "@fontsource-variable/martian-mono/files/martian-mono-latin-wght-normal.woff2?url";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import { site } from "@/data/site";
+import { computeNoIndex } from "@/data/siteReady";
+
+interface Props {
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogTitle, ogDescription, ogImage } = Astro.props;
+
+const noIndex = computeNoIndex();
+const resolvedOgTitle = ogTitle ?? title;
+const resolvedOgDescription = ogDescription ?? description;
+const resolvedOgImage = ogImage ?? site.ogImage;
+
+const canonicalUrl = new URL(Astro.url.pathname, site.url).toString();
+const absoluteOgImage = new URL(resolvedOgImage, site.url).toString();
+
+const personJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  alternateName: site.nickname,
+  url: site.url,
+  jobTitle: "Model & Actor",
+  description: site.about.tagline,
+  sameAs: [site.instagram.url, ...site.reps.map((r) => r.url).filter(Boolean)],
+  address: site.locations.map((l) => ({ "@type": "PostalAddress", addressLocality: l })),
+  image: absoluteOgImage,
+}).replace(/</g, "\\u003c");
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={publicSansUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={martianMonoUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={resolvedOgTitle} />
+    <meta property="og:description" content={resolvedOgDescription} />
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedOgTitle} />
+    <meta name="twitter:description" content={resolvedOgDescription} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <script type="application/ld+json" is:inline set:html={personJsonLd} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Nav />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        z-index: 100;
+        padding: 0.6rem 1rem;
+        background: var(--accent);
+        color: var(--bg);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .skip-link:focus {
+        left: 0.5rem;
+        top: 0.5rem;
+      }
+      main {
+        min-height: 60vh;
+      }
+    </style>
+
+    <script is:inline>
+      // Reveal-on-scroll + nav hide-on-scroll-down. No dependencies.
+      (function () {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const revealEls = document.querySelectorAll(".reveal");
+        if (reduce || !("IntersectionObserver" in window)) {
+          revealEls.forEach((el) => el.classList.add("reveal-in"));
+        } else {
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) {
+                if (e.isIntersecting) {
+                  e.target.classList.add("reveal-in");
+                  io.unobserve(e.target);
+                }
+              }
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+          );
+          revealEls.forEach((el) => io.observe(el));
+        }
+
+        const nav = document.querySelector("[data-nav]");
+        let lastY = window.scrollY;
+        let ticking = false;
+        function onScroll() {
+          const y = window.scrollY;
+          if (nav) {
+            if (y < 80) nav.dataset.hidden = "false";
+            else if (y - lastY > 6) nav.dataset.hidden = "true";
+            else if (lastY - y > 6) nav.dataset.hidden = "false";
+            nav.dataset.scrolled = y > 24 ? "true" : "false";
+          }
+          lastY = y;
+          ticking = false;
+        }
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(onScroll);
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        onScroll();
+      })();
+    </script>
+  </body>
+</html>
