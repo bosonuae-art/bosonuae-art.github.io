@@ -56,7 +56,8 @@ const reel = [
         muted
         loop
         playsinline
-        preload="metadata"
+        webkit-playsinline
+        preload="auto"
         poster="/videos/hero-poster.jpg"
       >
         <source src="/videos/hero.mp4" type="video/mp4" />
@@ -87,6 +88,29 @@ const reel = [
       <span></span>
     </a>
   </section>
+
+  <script is:inline>
+    // Force the hero video to autoplay without a tap. iOS/Safari (and Low Power
+    // Mode especially) can ignore the `autoplay` attribute and show a play
+    // button; calling play() from JS on a muted, inline video is allowed and
+    // clears it. We also retry on the first user gesture as a fallback.
+    (function () {
+      var v = document.querySelector(".hero__video");
+      if (!v) return;
+      v.muted = true; // property, not just the attribute — required by iOS
+      v.setAttribute("muted", "");
+      var play = function () {
+        var p = v.play();
+        if (p && typeof p.catch === "function") p.catch(function () {});
+      };
+      play();
+      v.addEventListener("loadeddata", play, { once: true });
+      v.addEventListener("canplay", play, { once: true });
+      ["touchstart", "pointerdown", "click", "scroll"].forEach(function (evt) {
+        window.addEventListener(evt, play, { once: true, passive: true });
+      });
+    })();
+  </script>
 
   <!-- ── Approach / stats ─────────────────────────────────── -->
   <section id="approach" class="approach">
