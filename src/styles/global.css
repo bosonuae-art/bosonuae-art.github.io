@@ -18,6 +18,29 @@ html {
   transition: --accent 800ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Ambient color wash — a soft, full-viewport glow in the current --accent,
+   painted behind all content (z-index:-1 sits above the black bg, below text
+   and photos). As --accent eases toward each photo's color on scroll (see the
+   accent script in BaseLayout), the whole page bathes in that color. This is
+   what makes the "evolving color" felt rather than just tinting a few links.
+   Decorative only — pointer-events:none, and it eases with --accent for free.
+   Under reduced-motion the accent stays at the base gold, so this is a faint
+   static glow. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(125% 90% at 50% -15%,
+      color-mix(in oklab, var(--accent) 26%, transparent) 0%,
+      transparent 58%),
+    radial-gradient(120% 85% at 50% 115%,
+      color-mix(in oklab, var(--accent) 20%, transparent) 0%,
+      transparent 55%);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

@@ -8,7 +8,39 @@ import Representation from "@/components/Representation.astro";
 import InstagramStrip from "@/components/InstagramStrip.astro";
 import ContactDetails from "@/components/ContactDetails.astro";
 import { site } from "@/data/site";
+import { colorFor } from "@/data/gallery";
 import hero from "@/assets/portraits/hero-leather.jpg";
+
+// ── In-color reel ──────────────────────────────────────────────────────────
+// A curated run of his work, ordered by hue so scrolling flows through a
+// deliberate color arc: crimson → red → burnt orange → gold → olive → teal →
+// purple. Each figure carries data-accent-color, so as it reaches the viewport
+// center the accent engine (BaseLayout) eases the whole site — accent + ambient
+// wash — into that photo's color. Reorder this array to change the journey.
+import reelRedPortrait from "@/assets/portraits/editorial-red-portrait.jpg";
+import reelRedChains from "@/assets/portraits/editorial-red-chains.jpg";
+import reelStudioChains from "@/assets/portraits/studio-chains-1.jpg";
+import reelGold from "@/assets/portraits/conceptual-gold-1.jpg";
+import reelLeather from "@/assets/portraits/studio-leather.jpg";
+import reelTeal from "@/assets/portraits/conceptual-gold-2.jpg";
+import reelRunway from "@/assets/portraits/fashion-week-1.jpg";
+
+const reel = [
+  { src: reelRedPortrait, file: "editorial-red-portrait.jpg", label: "Editorial",
+    alt: "Close, dramatic portrait of Jett Williams with chains lit against deep red." },
+  { src: reelRedChains, file: "editorial-red-chains.jpg", label: "Editorial",
+    alt: "Jett Williams in black with layered chains against a deep red backdrop." },
+  { src: reelStudioChains, file: "studio-chains-1.jpg", label: "Studio",
+    alt: "Shirtless studio portrait of Jett Williams with silver chains, arm raised, on black." },
+  { src: reelGold, file: "conceptual-gold-1.jpg", label: "Conceptual",
+    alt: "Jett Williams in gold body paint standing in water at sunset." },
+  { src: reelLeather, file: "studio-leather.jpg", label: "Studio",
+    alt: "Low-key studio portrait of Jett Williams in a studded leather jacket." },
+  { src: reelTeal, file: "conceptual-gold-2.jpg", label: "Conceptual",
+    alt: "Gold-painted figure in water, arm bent and head lowered." },
+  { src: reelRunway, file: "fashion-week-1.jpg", label: "Fashion Week",
+    alt: "Jett Williams walking the runway at Dallas Fashion Week, Day 1 2026." },
+].map((r, i) => ({ ...r, color: colorFor(r.file), n: String(i + 1).padStart(2, "0") }));
 ---
 
 <BaseLayout
@@ -76,6 +108,37 @@ import hero from "@/assets/portraits/hero-leather.jpg";
       </div>
     </div>
     <p class="container-content approach__stat-note reveal">{site.statLine}</p>
+  </section>
+
+  <!-- ── In-color reel (scroll = color journey) ───────────── -->
+  <section class="reel" aria-label="Selected work, in color">
+    <div class="reel__intro container-content reveal">
+      <p class="eyebrow">In Color</p>
+      <h2 class="reel__title">A spectrum of work</h2>
+      <p class="reel__lede text-pretty">
+        Keep scrolling — the site takes on the color of each frame, shot for shot.
+      </p>
+    </div>
+    <div class="reel__track">
+      {
+        reel.map((r) => (
+          <figure class="reel__item reveal" data-accent-color={r.color} style={`--c:${r.color}`}>
+            <Image
+              src={r.src}
+              alt={r.alt}
+              widths={[600, 900, 1240]}
+              sizes="(min-width:900px) 55vw, 82vw"
+              class="reel__img"
+              loading="lazy"
+            />
+            <figcaption class="reel__tag">
+              <span class="reel__n">{r.n}</span>
+              {r.label}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
   </section>
 
   <!-- ── Featured credits ─────────────────────────────────── -->
@@ -287,6 +350,79 @@ import hero from "@/assets/portraits/hero-leather.jpg";
     .approach__inner {
       grid-template-columns: 1.3fr 1fr;
       gap: 5rem;
+    }
+  }
+
+  /* In-color reel — the scroll-driven color journey */
+  .reel {
+    padding-block: clamp(4rem, 10vw, 9rem);
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .reel__intro {
+    max-width: 46ch;
+    margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  }
+  .reel__title {
+    font-size: clamp(32px, 5vw, 60px);
+    margin-top: 0.75rem;
+  }
+  .reel__lede {
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: 18px;
+    max-width: 40ch;
+  }
+  .reel__track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(4rem, 12vh, 9rem);
+  }
+  .reel__item {
+    position: relative;
+    width: min(600px, 82vw);
+    margin: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    /* each frame radiates its own extracted color (--c) */
+    box-shadow: 0 40px 130px -55px var(--c, transparent);
+  }
+  .reel__img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .reel__tag {
+    position: absolute;
+    left: 0.85rem;
+    bottom: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: color-mix(in oklab, var(--c) 22%, rgba(0, 0, 0, 0.6));
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c) 45%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .reel__n {
+    color: color-mix(in oklab, var(--c) 70%, white);
+  }
+  /* Gentle zigzag on wide screens so the column has rhythm. */
+  @media (min-width: 900px) {
+    .reel__item:nth-child(odd) {
+      align-self: flex-start;
+      margin-left: clamp(0px, 7vw, 8rem);
+    }
+    .reel__item:nth-child(even) {
+      align-self: flex-end;
+      margin-right: clamp(0px, 7vw, 8rem);
     }
   }
 
