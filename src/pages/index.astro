@@ -201,18 +201,11 @@ const reel = [
     object-fit: cover;
     object-position: 50% 30%;
   }
-  /* Desktop: motion. Mobile / reduced-motion: the still portrait (saves data
-     and honors the user's preference). */
+  /* Motion on every screen size, including mobile. The still portrait is shown
+     only when the visitor prefers reduced motion. (video is muted + playsinline
+     so it autoplays on iOS/Android.) */
   .hero__img--fallback {
     display: none;
-  }
-  @media (max-width: 767px) {
-    .hero__video {
-      display: none;
-    }
-    .hero__img--fallback {
-      display: block;
-    }
   }
   @media (prefers-reduced-motion: reduce) {
     .hero__video {
