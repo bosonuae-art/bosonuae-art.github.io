@@ -21,9 +21,11 @@ export interface Rep {
 
 export interface Download {
   label: string;
+  /** short descriptor shown under the label */
+  note?: string;
   /** local file in /public/downloads, or an external URL when external=true */
   file: string;
-  /** preview image in /public/downloads for the on-page thumbnail */
+  /** preview image filename in src/assets/downloads for the on-page thumbnail */
   preview?: string;
   external?: boolean;
 }
@@ -88,21 +90,25 @@ export const site = {
   downloads: [
     {
       label: "Comp Card Q2 '26",
+      note: "Front & back — measurements, contact, portfolio",
       file: "/downloads/comp-card-q2-2026.pdf",
-      preview: "/downloads/comp-card-cover.png",
+      preview: "comp-card-cover.png",
     },
     {
       label: "Modeling Résumé '26",
+      note: "Stats, experience, and representation",
       file: "/downloads/modeling-resume-2026.pdf",
-      preview: "/downloads/modeling-resume.png",
+      preview: "modeling-resume.png",
     },
     {
       label: "Acting Résumé '26",
+      note: "Screen credits, training, and skills",
       file: "/downloads/acting-resume-2026.pdf",
-      preview: "/downloads/acting-resume.png",
+      preview: "acting-resume.png",
     },
     {
       label: "Actors Access",
+      note: "Live casting profile",
       file: "https://resumes.actorsaccess.com/AAJatinJettWilliams",
       external: true,
     },

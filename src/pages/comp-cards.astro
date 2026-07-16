@@ -1,0 +1,105 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { ImageMetadata } from "astro";
+import Button from "@/components/Button.astro";
+import CompCard from "@/components/CompCard.astro";
+import ContactDetails from "@/components/ContactDetails.astro";
+import { site } from "@/data/site";
+
+// Resolve preview filenames to optimized image modules.
+const previews = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/downloads/*.{png,jpg,jpeg}",
+  { eager: true }
+);
+const previewFor = (name?: string) => {
+  if (!name) return undefined;
+  const key = Object.keys(previews).find((k) => k.endsWith("/" + name));
+  return key ? previews[key].default : undefined;
+};
+---
+
+<BaseLayout
+  title={`Comp Cards & Résumés — ${site.name}`}
+  description="Download comp cards, modeling and acting résumés, and view the Actors Access profile for Jatin “Jett” Williams."
+>
+  <header class="ch container-content">
+    <p class="eyebrow reveal">Comp Cards Q2'26</p>
+    <h1 class="ch__title reveal">Résumés & More</h1>
+    <p class="ch__sub reveal text-pretty">
+      Comp cards, digitals, and résumés for casting and booking — download the PDFs or
+      view the live Actors Access profile.
+    </p>
+  </header>
+
+  <div class="container-content">
+    <div class="cc-grid">
+      {site.downloads.map((d) => <CompCard item={d} preview={previewFor(d.preview)} />)}
+    </div>
+  </div>
+
+  <section class="ch-cta">
+    <div class="container-content ch-cta__inner reveal">
+      <div>
+        <p class="eyebrow">Need something specific?</p>
+        <h2 class="ch-cta__title">Request additional digitals or sizes.</h2>
+        <div style="margin-top:1.75rem;"><Button href="/contact">Contact the Team</Button></div>
+      </div>
+      <ContactDetails />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ch {
+    padding-top: clamp(7rem, 14vh, 10rem);
+    padding-bottom: 3rem;
+  }
+  .ch__title {
+    font-size: clamp(40px, 8vw, 92px);
+    line-height: 0.92;
+    margin: 0.5rem 0 0;
+  }
+  .ch__sub {
+    margin-top: 1.5rem;
+    max-width: 54ch;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .cc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .ch-cta {
+    padding-block: clamp(4rem, 9vw, 7rem);
+    border-top: 1px solid var(--line);
+  }
+  .ch-cta__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .ch-cta__title {
+    font-size: clamp(28px, 4.5vw, 44px);
+    max-width: 16ch;
+    margin-top: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .cc-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .cc-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (min-width: 860px) {
+    .ch-cta__inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+    }
+  }
+</style>

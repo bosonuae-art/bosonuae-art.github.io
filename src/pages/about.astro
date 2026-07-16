@@ -1,0 +1,190 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import Button from "@/components/Button.astro";
+import ContactDetails from "@/components/ContactDetails.astro";
+import { site } from "@/data/site";
+import portrait from "@/assets/portraits/about-portrait.jpg";
+
+const { about } = site;
+---
+
+<BaseLayout title={`About — ${site.name}`} description={about.tagline}>
+  <header class="ah container-content">
+    <p class="eyebrow reveal">About</p>
+    <h1 class="ah__title reveal">{about.heading}</h1>
+    <p class="ah__tag reveal text-pretty">{about.tagline}</p>
+  </header>
+
+  <div class="container-content ab">
+    <div class="ab__media reveal">
+      <Image
+        src={portrait}
+        alt={`${site.name}, ${site.role}`}
+        widths={[500, 800]}
+        sizes="(min-width:900px) 40vw, 90vw"
+        class="ab__img"
+        loading="lazy"
+      />
+      <ul class="ab__stats">
+        {about.stats.map((s) => <li class="chip">{s}</li>)}
+      </ul>
+    </div>
+
+    <div class="ab__prose reveal">
+      {about.paragraphs.map((p) => <p>{p}</p>)}
+
+      <div class="ab__interests">
+        <p class="eyebrow">Off set</p>
+        <ul>
+          {about.interests.map((it) => <li>{it}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <section class="ab-avail">
+    <div class="container-content reveal">
+      <p class="ab-avail__text text-balance">{about.availability}</p>
+      <div class="ab-avail__btn"><Button href="/contact">Book Now</Button></div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="container-content ab-cta__inner reveal">
+      <div>
+        <p class="eyebrow">Contact the Team</p>
+        <h2 class="ab-cta__title">Let's talk about your production.</h2>
+      </div>
+      <ContactDetails />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ah {
+    padding-top: clamp(7rem, 14vh, 10rem);
+    padding-bottom: 3rem;
+  }
+  .ah__title {
+    font-size: clamp(40px, 7vw, 84px);
+    line-height: 0.95;
+    margin: 0.5rem 0 0;
+    max-width: 14ch;
+  }
+  .ah__tag {
+    margin-top: 1.5rem;
+    max-width: 44ch;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .ab {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .ab__media {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .ab__img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  .ab__stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .ab__prose p {
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.75;
+    margin: 0 0 1.4rem;
+    max-width: 62ch;
+  }
+  .ab__prose p:first-child::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.6em;
+    line-height: 0.8;
+    float: left;
+    margin: 0.05em 0.12em 0 0;
+    color: var(--accent);
+  }
+  .ab__interests {
+    margin-top: 2.5rem;
+  }
+  .ab__interests ul {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .ab__interests li {
+    font-size: 15px;
+    color: var(--text);
+    padding-left: 1rem;
+    position: relative;
+  }
+  .ab__interests li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  .ab-avail {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    border-top: 1px solid var(--line);
+  }
+  .ab-avail__text {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 4vw, 40px);
+    line-height: 1.2;
+    color: var(--text);
+    max-width: 26ch;
+  }
+  .ab-avail__btn {
+    margin-top: 2rem;
+  }
+  .ab-cta {
+    padding-block: clamp(4rem, 9vw, 7rem);
+    border-top: 1px solid var(--line);
+  }
+  .ab-cta__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .ab-cta__title {
+    font-size: clamp(28px, 4.5vw, 44px);
+    max-width: 14ch;
+    margin-top: 0.75rem;
+  }
+  @media (min-width: 900px) {
+    .ab {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4.5rem;
+      align-items: start;
+    }
+    .ab__media {
+      position: sticky;
+      top: 92px;
+    }
+  }
+  @media (min-width: 860px) {
+    .ab-cta__inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+    }
+  }
+</style>

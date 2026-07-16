@@ -1,0 +1,200 @@
+---
+import { site } from "@/data/site";
+
+// Web3Forms access key from env (public — it's a submit-only key, safe to ship).
+// Empty key → the form stays inert and points to email, so the site builds and
+// deploys without a secret. Add PUBLIC_WEB3FORMS_KEY to go live. See README.
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+const configured = key.length > 0;
+
+const projectTypes = [
+  "Runway",
+  "Print / Editorial",
+  "Commercial",
+  "Film / TV",
+  "Brand Campaign",
+  "Other",
+];
+---
+
+<form class="cf" data-contact-form data-configured={String(configured)}>
+  {
+    !configured && (
+      <p class="cf__notice">
+        The booking form isn't connected yet. In the meantime, email{" "}
+        <a href={`mailto:${site.email}`}>{site.email}</a> directly.
+      </p>
+    )
+  }
+
+  <input type="hidden" name="access_key" value={key} />
+  <input type="hidden" name="subject" value={`New booking inquiry — ${site.name}`} />
+  <input type="hidden" name="from_name" value={site.name} />
+  <!-- honeypot -->
+  <input type="checkbox" name="botcheck" class="cf__hp" tabindex="-1" autocomplete="off" />
+
+  <div class="cf__row">
+    <label class="cf__field">
+      <span>Name</span>
+      <input type="text" name="name" required autocomplete="name" />
+    </label>
+    <label class="cf__field">
+      <span>Email</span>
+      <input type="email" name="email" required autocomplete="email" />
+    </label>
+  </div>
+
+  <div class="cf__row">
+    <label class="cf__field">
+      <span>Production / Company</span>
+      <input type="text" name="company" autocomplete="organization" />
+    </label>
+    <label class="cf__field">
+      <span>Project type</span>
+      <select name="project_type">
+        {projectTypes.map((t) => <option value={t}>{t}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <label class="cf__field">
+    <span>Message</span>
+    <textarea name="message" rows="6" required placeholder="Tell us about the production, dates, and location."></textarea>
+  </label>
+
+  <button type="submit" class="btn-accent cf__submit">Send inquiry</button>
+  <p class="cf__status" data-cf-status role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .cf {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .cf__notice {
+    padding: 0.9rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: 3px;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .cf__notice a {
+    color: var(--accent);
+  }
+  .cf__hp {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+  }
+  .cf__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .cf__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .cf__field span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cf__field input,
+  .cf__field select,
+  .cf__field textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+  }
+  .cf__field input:focus,
+  .cf__field select:focus,
+  .cf__field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .cf__field textarea {
+    resize: vertical;
+  }
+  .cf__submit {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+  .cf__submit[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .cf__status {
+    margin: 0;
+    font-size: 14px;
+    min-height: 1.2em;
+  }
+  .cf__status[data-state="ok"] {
+    color: var(--accent);
+  }
+  .cf__status[data-state="err"] {
+    color: #e0736f;
+  }
+  @media (min-width: 620px) {
+    .cf__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const form = document.querySelector("[data-contact-form]");
+    if (!form) return;
+    const status = form.querySelector("[data-cf-status]");
+    const submit = form.querySelector(".cf__submit");
+    const configured = form.getAttribute("data-configured") === "true";
+
+    function setStatus(msg, state) {
+      status.textContent = msg;
+      if (state) status.setAttribute("data-state", state);
+      else status.removeAttribute("data-state");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!configured) {
+        setStatus("The form isn't connected yet — please email us directly.", "err");
+        return;
+      }
+      if (form.botcheck && form.botcheck.checked) return; // honeypot tripped
+      submit.disabled = true;
+      setStatus("Sending…");
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const data = await res.json();
+        if (data.success) {
+          form.reset();
+          setStatus("Thank you — your inquiry has been sent. We'll be in touch shortly.", "ok");
+        } else {
+          setStatus(data.message || "Something went wrong. Please email us instead.", "err");
+        }
+      } catch (err) {
+        setStatus("Network error. Please email us instead.", "err");
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  })();
+</script>

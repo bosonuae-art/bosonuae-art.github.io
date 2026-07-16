@@ -1,0 +1,71 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import ContactDetails from "@/components/ContactDetails.astro";
+import Representation from "@/components/Representation.astro";
+import { site } from "@/data/site";
+---
+
+<BaseLayout
+  title={`Contact & Booking — ${site.name}`}
+  description="Book Jatin “Jett” Williams for runway, print, editorial, commercial, film, and television. Domestic and international bookings."
+>
+  <header class="con container-content">
+    <p class="eyebrow reveal">Contact</p>
+    <h1 class="con__title reveal">Reach Out</h1>
+    <p class="con__intro reveal text-pretty">{site.contactIntro}</p>
+  </header>
+
+  <div class="container-content con__body">
+    <div class="con__form reveal">
+      <ContactForm />
+    </div>
+    <aside class="con__aside reveal">
+      <ContactDetails />
+      <div class="con__reps">
+        <p class="eyebrow">Representation</p>
+        <Representation />
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .con {
+    padding-top: clamp(7rem, 14vh, 10rem);
+    padding-bottom: 3rem;
+  }
+  .con__title {
+    font-size: clamp(44px, 8vw, 96px);
+    line-height: 0.92;
+    margin: 0.5rem 0 0;
+  }
+  .con__intro {
+    margin-top: 1.5rem;
+    max-width: 60ch;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .con__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    padding-bottom: clamp(4rem, 9vw, 7rem);
+  }
+  .con__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .con__reps .eyebrow {
+    margin-bottom: 1rem;
+    display: block;
+  }
+  @media (min-width: 920px) {
+    .con__body {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+  }
+</style>
