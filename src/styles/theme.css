@@ -1,0 +1,40 @@
+/* ── Theme ──────────────────────────────────────────────────────────────
+   THE tweak file. Change any value below and the whole site recolors.
+   Six variables control everything. See THEME.md for a plain-language guide
+   and copy-paste preset palettes.
+
+     --bg       page background
+     --surface  cards / raised panels
+     --text     primary text
+     --muted    secondary text, captions
+     --accent   links, highlights, buttons
+     --line     borders / dividers
+   ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Default palette — "Noir Gold" (dark editorial) */
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --text: #f5f4f2;
+  --muted: #9b9b97;
+  --accent: #c9a86a;
+  --line: rgba(255, 255, 255, 0.12);
+  color-scheme: dark;
+}
+
+/* ── Preset palettes ─────────────────────────────────────────────────────
+   To use one, copy its six values over the ones in :root above.
+
+   Onyx (neutral, no color — let the photography carry it)
+     --bg:#0a0a0a; --surface:#161616; --text:#f4f4f4; --muted:#9a9a9a;
+     --accent:#eaeaea; --line:rgba(255,255,255,.12);
+
+   Bordeaux (deep red, dramatic)
+     --bg:#0c0808; --surface:#1a1212; --text:#f6f1f1; --muted:#a99a9a;
+     --accent:#b5485a; --line:rgba(255,255,255,.12);
+
+   Ivory (light / magazine — flips the whole site bright)
+     --bg:#f6f4ef; --surface:#ffffff; --text:#161514; --muted:#6b6862;
+     --accent:#9a6b2f; --line:rgba(0,0,0,.12);
+   (For Ivory also change `color-scheme: dark;` above to `light`.)
+   ─────────────────────────────────────────────────────────────────────── */

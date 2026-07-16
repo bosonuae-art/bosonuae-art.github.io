@@ -1,0 +1,32 @@
+{
+  "name": "jatin-williams-website",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "safe-check": "node scripts/safe-check.mjs",
+    "test:smoke": "playwright test",
+    "test:all": "npm run check && npm run build && npm run safe-check && npm run test:smoke"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "3.1.6",
+    "@astrojs/tailwind": "^5.1.4",
+    "@fontsource-variable/fraunces": "^5.2.5",
+    "@fontsource-variable/martian-mono": "^5.2.7",
+    "@fontsource-variable/public-sans": "^5.2.7",
+    "@tailwindcss/typography": "^0.5.15",
+    "astro": "^4.16.18",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}

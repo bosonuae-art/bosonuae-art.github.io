@@ -1,0 +1,18 @@
+/* ── Fonts ──────────────────────────────────────────────────────────────
+   Three faces, three variables. To swap a font:
+   1. Change the @fontsource-variable import below (browse at fontsource.org).
+   2. Change the matching --font-* value to the new family name.
+   That's it — every heading/body/label updates site-wide. See THEME.md. */
+
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/public-sans";
+@import "@fontsource-variable/martian-mono";
+
+:root {
+  /* display = headlines (editorial serif) */
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  /* body = paragraphs + UI (clean sans) */
+  --font-body: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  /* mono = small-caps labels / kickers (machine voice) */
+  --font-mono: "Martian Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
