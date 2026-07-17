@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const routes = ["/", "/portfolio", "/comp-cards", "/about", "/contact"];
+const routes = ["/", "/portfolio", "/comp-cards", "/about", "/contact", "/press"];
 
 for (const route of routes) {
   test(`${route} loads with hero, nav, and footer`, async ({ page }) => {

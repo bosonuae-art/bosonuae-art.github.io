@@ -1,0 +1,358 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import CompCard from "@/components/CompCard.astro";
+import ContactDetails from "@/components/ContactDetails.astro";
+import Representation from "@/components/Representation.astro";
+import { site } from "@/data/site";
+import portrait from "@/assets/portraits/about-portrait.jpg";
+
+const { about } = site;
+
+// Primary action links to the downloadable comp card (first local download).
+const compCard = site.downloads.find((d) => !d.external);
+
+// Resolve download previews (same pattern as the comp-cards page).
+const previews = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/downloads/*.{png,jpg,jpeg}",
+  { eager: true }
+);
+const previewFor = (name?: string) => {
+  if (!name) return undefined;
+  const key = Object.keys(previews).find((k) => k.endsWith("/" + name));
+  return key ? previews[key].default : undefined;
+};
+---
+
+<BaseLayout
+  title={`Press Kit — ${site.name}`}
+  description={`One-sheet press kit for ${site.name}, ${site.role} — stats, credits, skills, downloads, and booking contacts.`}
+>
+  <article class="press">
+    <header class="press__masthead container-content">
+      <p class="eyebrow reveal">Press Kit</p>
+      <h1 class="press__name reveal">{site.name}</h1>
+      <p class="press__role reveal">{site.role} · {site.locations.join(" · ")}</p>
+      <p class="press__rep reveal">
+        Represented by {site.reps.map((r) => r.name).join(" & ")}
+      </p>
+      <div class="press__actions reveal">
+        {compCard && (
+          <a class="btn-accent" href={compCard.file} download>
+            Download comp card ↓
+          </a>
+        )}
+        <button class="btn-ghost" data-print type="button">Save as PDF</button>
+      </div>
+    </header>
+
+    <section class="press__intro container-content">
+      <div class="press__portrait reveal">
+        <Image
+          src={portrait}
+          alt={`${site.name}, ${site.role}`}
+          widths={[500, 800]}
+          sizes="(min-width:900px) 38vw, 90vw"
+          class="press__img"
+          loading="eager"
+        />
+        <ul class="press__pills">
+          {about.stats.map((s) => <li class="chip">{s}</li>)}
+        </ul>
+      </div>
+
+      <div class="press__facts reveal">
+        <p class="press__bio text-pretty">{about.tagline}</p>
+        <p class="eyebrow">Specifications</p>
+        <dl class="specs">
+          {site.measurements.map((m) => (
+            <div class="specs__row">
+              <dt class="specs__label">{m.label}</dt>
+              <dd class="specs__val">{m.value || "—"}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <section class="press__block container-content reveal">
+      <p class="eyebrow">Selected credits</p>
+      <h2 class="press__h2">Screen &amp; runway</h2>
+      <ul class="credits-list">
+        {site.screenCredits.map((c) => (
+          <li class="credit">
+            <div class="credit__head">
+              <span class="credit__title">{c.title}</span>
+              <span class="credit__detail">{c.detail}</span>
+            </div>
+            <div class="credit__meta">
+              <span>{c.role}</span>
+              {c.director && <span class="credit__dir">Dir. {c.director}</span>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="press__block container-content reveal">
+      <p class="eyebrow">Special skills</p>
+      <div class="press__skills">
+        {site.skills.map((g) => (
+          <div>
+            <h3 class="press__skillhead">{g.group}</h3>
+            <ul class="press__chiplist">
+              {g.items.map((it) => <li class="chip">{it}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="press__block container-content reveal">
+      <p class="eyebrow">Downloads</p>
+      <h2 class="press__h2">Comp cards &amp; résumés</h2>
+      <div class="press__downloads">
+        {site.downloads.map((d) => <CompCard item={d} preview={previewFor(d.preview)} />)}
+      </div>
+    </section>
+
+    <section class="press__block container-content reveal">
+      <p class="eyebrow">Booking</p>
+      <h2 class="press__h2">Book Jett</h2>
+      <div class="press__contact"><ContactDetails /></div>
+      <div class="press__reps"><Representation /></div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .press__masthead {
+    padding-top: clamp(7rem, 14vh, 10rem);
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .press__name {
+    font-size: clamp(40px, 8vw, 96px);
+    line-height: 0.92;
+    margin: 0.5rem 0 0;
+  }
+  .press__role {
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .press__rep {
+    margin-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .press__actions {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .press__intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: clamp(3rem, 8vw, 5rem);
+  }
+  .press__portrait {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .press__img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  .press__pills {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .press__bio {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.6vw, 28px);
+    line-height: 1.25;
+    color: var(--text);
+    margin: 0 0 2rem;
+    max-width: 30ch;
+  }
+
+  /* specs — same look as /about */
+  .specs {
+    margin: 1rem 0 0;
+  }
+  .specs__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .specs__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .specs__val {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text);
+    text-align: right;
+  }
+
+  .press__block {
+    padding-block: clamp(3rem, 7vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+  .press__h2 {
+    font-size: clamp(26px, 4vw, 42px);
+    margin: 0.5rem 0 2rem;
+  }
+
+  /* credits — same look as /about */
+  .credits-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .credit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .credit:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .credit__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .credit__title {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .credit__detail {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .credit__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .credit__dir {
+    color: var(--text);
+  }
+
+  .press__skills {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .press__skillhead {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .press__chiplist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .press__downloads {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .press__contact {
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .press__downloads {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .press__skills {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 760px) {
+    .credit {
+      grid-template-columns: 1fr 1.4fr;
+      align-items: baseline;
+      gap: 2rem;
+    }
+  }
+  @media (min-width: 900px) {
+    .press__intro {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .press__portrait {
+      position: sticky;
+      top: 92px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .press__downloads {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
+
+<!-- Print / save-to-PDF: strip the fixed chrome so a printed one-sheet is clean.
+     Global (not scoped) so it can reach the nav, footer, and ambient wash. -->
+<style is:global>
+  @media print {
+    [data-nav],
+    footer,
+    .press__actions {
+      display: none !important;
+    }
+    body::before {
+      display: none !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  document
+    .querySelector("[data-print]")
+    ?.addEventListener("click", () => window.print());
+</script>

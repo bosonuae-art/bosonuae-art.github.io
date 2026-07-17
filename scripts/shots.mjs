@@ -45,6 +45,7 @@ const ALL_PAGES = [
   { slug: "portfolio", path: "/portfolio" },
   { slug: "comp-cards", path: "/comp-cards" },
   { slug: "contact", path: "/contact" },
+  { slug: "press", path: "/press" },
 ];
 const ALL_SIZES = [
   { name: "mobile", width: 390, height: 844 },
