@@ -94,3 +94,26 @@ export const gallery: GalleryItem[] = entries.map((e) => ({
 export const colorFor = (file: string): string => colors[file] ?? DEFAULT_COLOR;
 
 export const featured: GalleryItem[] = gallery.filter((g) => g.featured);
+
+// ── Digitals ───────────────────────────────────────────────────────────────
+// A clean, current reference set for casting — front / portrait / physique,
+// not artistic edits. Uses the most digital-appropriate frames already on file;
+// full unretouched digitals and current sizes are available on request.
+export interface DigitalItem {
+  src: ImageMetadata;
+  alt: string;
+}
+
+const digitalFiles: { file: string; alt: string }[] = [
+  { file: "beauty-white-1.png", alt: "Clean beauty digital of Jett Williams on a white background." },
+  { file: "studio-portrait.jpg", alt: "Studio portrait digital of Jett Williams." },
+  { file: "studio-chains-2.jpg", alt: "Studio physique digital of Jett Williams on black." },
+  { file: "editorial-bw-leather.jpg", alt: "Black-and-white portrait digital of Jett Williams." },
+  { file: "studio-intl.jpg", alt: "Dark studio portrait digital of Jett Williams." },
+  { file: "beauty-white-2.png", alt: "Clean beauty digital of Jett Williams on a white background." },
+];
+
+export const digitals: DigitalItem[] = digitalFiles.map((e) => ({
+  src: img(e.file),
+  alt: e.alt,
+}));

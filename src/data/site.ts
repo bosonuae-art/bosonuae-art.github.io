@@ -32,6 +32,35 @@ export interface Download {
   external?: boolean;
 }
 
+export interface HomeStat {
+  num: string;
+  label: string;
+}
+
+export interface Measurement {
+  label: string;
+  /** Leave "" until Jett confirms — the block renders "—" for empty values. */
+  value: string;
+}
+
+export interface SkillGroup {
+  group: string;
+  items: string[];
+}
+
+export interface Training {
+  title: string;
+  org: string;
+}
+
+export interface ScreenCredit {
+  title: string;
+  /** season or medium, e.g. "Season 3" / "Brand campaign" */
+  detail: string;
+  role: string;
+  director?: string;
+}
+
 export const site = {
   name: 'Jatin "Jett" Williams',
   nickname: "Jett",
@@ -39,10 +68,16 @@ export const site = {
 
   // ── Home ──
   taglineHero:
-    "Quality is intentional. I combine proven methods, strategic organization, and operational insight to produce high quality content designed to perform.",
-  statLine:
-    "My platforms generate over 65,000 views per quarter with an average 76% retention rate, reflecting consistent, measurable engagement and sustained audience attention.",
+    "Quality is intentional. I combine proven methods, strategic organization, and operational insight to produce high quality work designed to perform.",
   qualityHeading: "Quality Is Not an Accident",
+  // Home headline stats — what agents and casting actually book on (credits +
+  // physical range), not content-platform view metrics.
+  homeStats: [
+    { num: "6", label: "Screen & runway credits" },
+    { num: "17 yrs", label: "Martial arts, stunt & movement" },
+  ] satisfies HomeStat[],
+  homeStatNote:
+    "Work across film, television, runway, editorial, and commercial campaigns — grounded in a physical foundation of martial arts, stunt, and athletic training.",
   franklinQuote: {
     text: "Well done is better than well said.",
     source: "Benjamin Franklin, Poor Richard's Almanack, 1737",
@@ -79,6 +114,10 @@ export const site = {
   email: "Jettwilliams.svc@gmail.com",
   phoneUS: "+1 (469) 416 0894",
   phoneIntl: "+971 (53) 583-9444",
+  // WhatsApp is the primary booking channel for the UAE/Dubai market (his comp
+  // card lists it on the US number). Drives the one-tap wa.me button.
+  whatsapp: "+1 (469) 416 0894",
+  whatsappMessage: "Hi Jett — I'd like to talk about a booking.",
   locations: [
     "Dallas–Fort Worth, Texas, United States",
     "Dubai, United Arab Emirates",
@@ -116,6 +155,16 @@ export const site = {
     },
   ] satisfies Download[],
 
+  // ── Showreel ──
+  // Drop a demo reel at /public/videos/reel.mp4 and set `src` below to show the
+  // player. Until a reel exists, the Reel section shows a tasteful
+  // "available on request" placeholder (no amateur "coming soon").
+  reel: {
+    src: "", // e.g. "/videos/reel.mp4"
+    poster: "/videos/portfolio-poster.jpg",
+    note: "Showreel available on request",
+  },
+
   // ── About ──
   about: {
     heading: "The Man Behind the Motion",
@@ -145,6 +194,92 @@ export const site = {
       "Art & philosophy",
     ],
   },
+
+  // ── Casting details ────────────────────────────────────────────────────────
+  // Skills, credits, and training are taken from Jett's résumés. Until now they
+  // lived only inside image-PDFs, so search engines and AI couldn't read them —
+  // surfacing them here as text makes him findable and casting-ready.
+  //
+  // ⚠️ PLACEHOLDER NUMBERS — these are made up so the /about specs block looks
+  // complete while the site is private (noindex). Physical measurements are in
+  // NONE of Jett's current assets. REPLACE every value below with his real
+  // numbers before go-live. (Hair/Eyes are from his photos; the rest are dummy.)
+  // Empty values render as "—".
+  measurements: [
+    { label: "Height", value: `6'1"` },
+    { label: "Weight", value: "165 lb" },
+    { label: "Chest", value: `39"` },
+    { label: "Waist", value: `31"` },
+    { label: "Inseam", value: `32"` },
+    { label: "Suit / Jacket", value: "40R" },
+    { label: "Shirt / Collar", value: `15.5"` },
+    { label: "Shoe", value: "11 US" },
+    { label: "Hair", value: "Black" },
+    { label: "Eyes", value: "Brown" },
+  ] satisfies Measurement[],
+
+  skills: [
+    {
+      group: "Stunt & movement",
+      items: [
+        "Tumbling & stunting",
+        "Weapons handling",
+        "Horsemanship",
+        "Martial arts — TaeKwonDo, Judo, Jiu-Jitsu, Muay Thai",
+      ],
+    },
+    {
+      group: "Skilled & certified",
+      items: [
+        "Motorcycle riding & mechanical (Honda VTX)",
+        "Wildland firefighting (chainsaw certified)",
+      ],
+    },
+    {
+      group: "Voice & performance",
+      items: ["Accents", "Singing", "Guitar", "Improv"],
+    },
+  ] satisfies SkillGroup[],
+
+  training: [
+    { title: "Fundamentals of Acting", org: "Micheal Brennan" },
+    { title: "Improv 101", org: "Southern Methodist University" },
+    { title: "Radio, Television & Film", org: "Collin College" },
+    { title: "Modeling Techniques", org: "University of North Texas" },
+  ] satisfies Training[],
+
+  screenCredits: [
+    {
+      title: "Lioness",
+      detail: "Season 3",
+      role: "Man on Phone (ep. 6) · Man with Girlfriend (ep. 8)",
+      director: "Taylor Sheridan",
+    },
+    {
+      title: "The Chosen",
+      detail: "Season 6",
+      role: "Featured role · Jesus' Escort · Concerned Villager",
+      director: "Dallas Jenkins",
+    },
+    {
+      title: "Toyota Music Pavilion",
+      detail: "Promo",
+      role: "Commercial Actor",
+      director: "Jessica Flores",
+    },
+    {
+      title: "Supercuts",
+      detail: "Brand campaign",
+      role: "Commercial Actor / Model",
+      director: "Megan White",
+    },
+    {
+      title: "Runway 817",
+      detail: "Commercial",
+      role: "Actor / Model",
+      director: "Anna Venko",
+    },
+  ] satisfies ScreenCredit[],
 
   // ── Meta ──
   url: "https://www.jatinwilliams.com",

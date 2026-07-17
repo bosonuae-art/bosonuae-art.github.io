@@ -30,8 +30,8 @@ const projectTypes = [
   <input type="hidden" name="access_key" value={key} />
   <input type="hidden" name="subject" value={`New booking inquiry — ${site.name}`} />
   <input type="hidden" name="from_name" value={site.name} />
-  <!-- honeypot -->
-  <input type="checkbox" name="botcheck" class="cf__hp" tabindex="-1" autocomplete="off" />
+  <!-- honeypot — hidden from users and assistive tech (aria-hidden) -->
+  <input type="checkbox" name="botcheck" class="cf__hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
   <div class="cf__row">
     <label class="cf__field">
@@ -84,6 +84,8 @@ const projectTypes = [
   }
   .cf__notice a {
     color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .cf__hp {
     position: absolute;

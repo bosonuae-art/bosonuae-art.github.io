@@ -28,6 +28,7 @@ const resolvedOgImage = ogImage ?? site.ogImage;
 const canonicalUrl = new URL(Astro.url.pathname, site.url).toString();
 const absoluteOgImage = new URL(resolvedOgImage, site.url).toString();
 
+const actorsAccess = site.downloads.find((d) => d.external)?.file;
 const personJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
@@ -36,7 +37,15 @@ const personJsonLd = JSON.stringify({
   url: site.url,
   jobTitle: "Model & Actor",
   description: site.about.tagline,
-  sameAs: [site.instagram.url, ...site.reps.map((r) => r.url).filter(Boolean)],
+  knowsAbout: site.skills.flatMap((g) => g.items),
+  alumniOf: [...new Set(site.training.map((t) => t.org))]
+    .filter((org) => /University|College|Institute|School/i.test(org))
+    .map((name) => ({ "@type": "EducationalOrganization", name })),
+  sameAs: [
+    site.instagram.url,
+    ...site.reps.map((r) => r.url).filter(Boolean),
+    actorsAccess,
+  ].filter(Boolean),
   address: site.locations.map((l) => ({ "@type": "PostalAddress", addressLocality: l })),
   image: absoluteOgImage,
 }).replace(/</g, "\\u003c");
