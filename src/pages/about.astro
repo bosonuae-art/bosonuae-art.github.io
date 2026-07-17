@@ -45,6 +45,69 @@ const portraitColor = colorFor("about-portrait.jpg");
     </div>
   </div>
 
+  <section class="ab-specs">
+    <div class="container-content ab-specs__grid">
+      <div class="ab-specs__col reveal">
+        <p class="eyebrow">Specifications</p>
+        <dl class="specs">
+          {site.measurements.map((m) => (
+            <div class="specs__row">
+              <dt class="specs__label">{m.label}</dt>
+              <dd class="specs__val">{m.value || "—"}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div class="ab-specs__col reveal">
+        <p class="eyebrow">Special skills</p>
+        <div class="skills">
+          {site.skills.map((g) => (
+            <div class="skills__group">
+              <h3 class="skills__heading">{g.group}</h3>
+              <ul class="skills__list">
+                {g.items.map((it) => <li class="chip">{it}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="ab-specs__col reveal">
+        <p class="eyebrow">Training</p>
+        <ul class="training">
+          {site.training.map((t) => (
+            <li class="training__item">
+              <span class="training__title">{t.title}</span>
+              <span class="training__org">{t.org}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-credits">
+    <div class="container-content reveal">
+      <p class="eyebrow">Selected credits</p>
+      <h2 class="ab-credits__title">Screen &amp; runway</h2>
+      <ul class="credits-list">
+        {site.screenCredits.map((c) => (
+          <li class="credit">
+            <div class="credit__head">
+              <span class="credit__title">{c.title}</span>
+              <span class="credit__detail">{c.detail}</span>
+            </div>
+            <div class="credit__meta">
+              <span class="credit__role">{c.role}</span>
+              {c.director && <span class="credit__dir">Dir. {c.director}</span>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section class="ab-avail">
     <div class="container-content reveal">
       <p class="ab-avail__text text-balance">{about.availability}</p>
@@ -171,6 +234,160 @@ const portraitColor = colorFor("about-portrait.jpg");
     font-size: clamp(28px, 4.5vw, 44px);
     max-width: 14ch;
     margin-top: 0.75rem;
+  }
+
+  /* Casting specs — measurements, skills, training */
+  .ab-specs {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    border-top: 1px solid var(--line);
+  }
+  .ab-specs__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .specs {
+    margin: 1.5rem 0 0;
+  }
+  .specs__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .specs__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .specs__val {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text);
+    text-align: right;
+  }
+  .skills {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .skills__heading {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .skills__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .training {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .training__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .training__item::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  .training__title {
+    font-size: 15px;
+    color: var(--text);
+  }
+  .training__org {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Selected credits */
+  .ab-credits {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    border-top: 1px solid var(--line);
+  }
+  .ab-credits__title {
+    font-size: clamp(28px, 4.5vw, 44px);
+    margin: 0.5rem 0 2rem;
+  }
+  .credits-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .credit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .credit:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .credit__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .credit__title {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .credit__detail {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .credit__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .credit__dir {
+    color: var(--text);
+  }
+  @media (min-width: 760px) {
+    .credit {
+      grid-template-columns: 1fr 1.4fr;
+      align-items: baseline;
+      gap: 2rem;
+    }
+  }
+  @media (min-width: 900px) {
+    .ab-specs__grid {
+      grid-template-columns: 0.9fr 1.35fr 1fr;
+      gap: 4rem;
+    }
   }
   @media (min-width: 900px) {
     .ab {
