@@ -2,6 +2,11 @@
 import { site } from "@/data/site";
 const telUS = "tel:" + site.phoneUS.replace(/[^+\d]/g, "");
 const telIntl = "tel:" + site.phoneIntl.replace(/[^+\d]/g, "");
+const waUrl =
+  "https://wa.me/" +
+  site.whatsapp.replace(/[^\d]/g, "") +
+  "?text=" +
+  encodeURIComponent(site.whatsappMessage);
 ---
 
 <div class="cd">
@@ -10,6 +15,10 @@ const telIntl = "tel:" + site.phoneIntl.replace(/[^+\d]/g, "");
     <a class="cd__lead" href={`mailto:${site.email}`}>{site.email}</a>
     <a href={telUS}>{site.phoneUS}</a>
     <a href={telIntl}><span class="cd__tag">Intl</span>{site.phoneIntl}</a>
+    <div class="cd__actions">
+      <a class="cd__action" href={waUrl} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+      <a class="cd__action" href="/jatin-jett-williams.vcf" download>Save contact ↓</a>
+    </div>
   </div>
 
   <div class="cd__group">
@@ -56,6 +65,27 @@ const telIntl = "tel:" + site.phoneIntl.replace(/[^+\d]/g, "");
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--accent);
+  }
+  .cd__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+  }
+  .cd__action {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .cd__action:hover {
+    background: var(--accent);
+    color: var(--bg);
   }
   @media (min-width: 560px) {
     .cd {

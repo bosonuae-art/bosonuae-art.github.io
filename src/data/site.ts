@@ -114,6 +114,10 @@ export const site = {
   email: "Jettwilliams.svc@gmail.com",
   phoneUS: "+1 (469) 416 0894",
   phoneIntl: "+971 (53) 583-9444",
+  // WhatsApp is the primary booking channel for the UAE/Dubai market (his comp
+  // card lists it on the US number). Drives the one-tap wa.me button.
+  whatsapp: "+1 (469) 416 0894",
+  whatsappMessage: "Hi Jett — I'd like to talk about a booking.",
   locations: [
     "Dallas–Fort Worth, Texas, United States",
     "Dubai, United Arab Emirates",
@@ -150,6 +154,16 @@ export const site = {
       external: true,
     },
   ] satisfies Download[],
+
+  // ── Showreel ──
+  // Drop a demo reel at /public/videos/reel.mp4 and set `src` below to show the
+  // player. Until a reel exists, the Reel section shows a tasteful
+  // "available on request" placeholder (no amateur "coming soon").
+  reel: {
+    src: "", // e.g. "/videos/reel.mp4"
+    poster: "/videos/portfolio-poster.jpg",
+    note: "Showreel available on request",
+  },
 
   // ── About ──
   about: {

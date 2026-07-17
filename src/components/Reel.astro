@@ -1,0 +1,101 @@
+---
+import Button from "@/components/Button.astro";
+import { site } from "@/data/site";
+
+const { reel } = site;
+const hasReel = Boolean(reel.src);
+---
+
+<section class="reelblk container-content reveal" aria-label="Showreel">
+  <div class="reelblk__head">
+    <p class="eyebrow">Showreel</p>
+    <h2 class="reelblk__title">See him move.</h2>
+  </div>
+
+  {
+    hasReel ? (
+      <div class="reelblk__frame">
+        <video class="reelblk__video" controls preload="metadata" poster={reel.poster} playsinline>
+          <source src={reel.src} type="video/mp4" />
+        </video>
+      </div>
+    ) : (
+      <div class="reelblk__frame reelblk__frame--empty" style={`background-image:url(${reel.poster})`}>
+        <div class="reelblk__overlay">
+          <span class="reelblk__badge">▶ {reel.note}</span>
+          <p class="reelblk__sub">
+            A demo reel is available on request while the current cut is finalized.
+          </p>
+          <Button href="/contact">Request the reel</Button>
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .reelblk {
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+  .reelblk__head {
+    margin-bottom: 2rem;
+  }
+  .reelblk__title {
+    font-size: clamp(28px, 4.5vw, 46px);
+    margin-top: 0.75rem;
+  }
+  .reelblk__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .reelblk__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .reelblk__frame--empty {
+    background-size: cover;
+    background-position: center 28%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .reelblk__frame--empty::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.82));
+  }
+  .reelblk__overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  .reelblk__badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .reelblk__sub {
+    margin: 0;
+    max-width: 44ch;
+    color: var(--muted);
+    font-size: 15px;
+  }
+</style>

@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/Button.astro";
 import Gallery from "@/components/Gallery.astro";
 import Digitals from "@/components/Digitals.astro";
+import Reel from "@/components/Reel.astro";
 import Lightbox from "@/components/Lightbox.astro";
 import ContactDetails from "@/components/ContactDetails.astro";
 import { site } from "@/data/site";
@@ -40,6 +41,8 @@ import { site } from "@/data/site";
       <p class="p-motion__note">Movement, timing, and body awareness from years of martial arts and athletic training — carried into every frame.</p>
     </div>
   </section>
+
+  <Reel />
 
   <div class="container-content" style="padding-bottom: clamp(3rem,8vw,6rem);">
     <Gallery />
