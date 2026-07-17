@@ -11,6 +11,7 @@
     "astro": "astro",
     "check": "astro check",
     "safe-check": "node scripts/safe-check.mjs",
+    "shots": "node scripts/shots.mjs",
     "test:smoke": "playwright test",
     "test:all": "npm run check && npm run build && npm run safe-check && npm run test:smoke"
   },
